@@ -2,11 +2,11 @@
 PWD ?= pwd_unknown
 
 # PROJECT_NAME defaults to name of the current directory.
-PROJECT_NAME = "mongo-node-express"
+PROJECT_NAME = "sms-management-api"
 
 # Note. If you change this, you also need to update docker-compose.yml.
 # only useful in a setting with multiple services/ makefiles.
-SERVICE_TARGET := api
+SERVICE_TARGET := sms-api
 
 # if vars not set specifically: try default to environment, else fixed value.
 # strip to ensure spaces are removed in future editorial mistakes.

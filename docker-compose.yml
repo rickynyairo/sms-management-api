@@ -2,7 +2,7 @@ version: "3.1"
 volumes:
   mongo_data:
 services:
-  api:
+  sms-api:
     build: .
     # context: .
     # dockerfile: Dockerfile
@@ -11,7 +11,7 @@ services:
     #   - HOST_UID=${HOST_UID:-4000}
     #   - HOST_USER=${HOST_USER:-nodummy}
     restart: unless-stopped
-    container_name: mongo-node-express
+    container_name: sms-management-api
     image: api:latest
     links:
       - mongo
