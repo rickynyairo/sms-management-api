@@ -132,6 +132,7 @@ test:
 	@ docker-compose -p $(DOCKER_TEST_PROJECT) -f $(DOCKER_TEST_COMPOSE_FILE) up -d
 	${INFO} "Containers are up, run tests ==>>"
 	@ docker-compose -p $(DOCKER_TEST_PROJECT) -f $(DOCKER_TEST_COMPOSE_FILE) run $(SERVICE_TARGET) sh -c 'yarn test'
+	@ docker-compose -p $(DOCKER_TEST_PROJECT) -f $(DOCKER_TEST_COMPOSE_FILE) run $(SERVICE_TARGET) sh -c 'yarn test:coverage'
 	${INFO} "Cleaning workspace after test"
 	@ docker-compose -p $(DOCKER_TEST_PROJECT) -f $(DOCKER_TEST_COMPOSE_FILE) down -v
 
