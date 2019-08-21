@@ -27,4 +27,4 @@ services:
     restart: unless-stopped
     image: mongo:4.0.1
     ports:
-      - 27020:27017
+      - 27017:27017
