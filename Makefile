@@ -130,10 +130,8 @@ test:
 	@ echo " "
 	${INFO} "Running tests in docker container"
 	@ docker-compose -p $(DOCKER_TEST_PROJECT) -f $(DOCKER_TEST_COMPOSE_FILE) up -d
-	${INFO} "Show running containers"
-	@ docker container ls
 	${INFO} "Containers are up, run tests ==>>"
-	# @ docker-compose -p $(DOCKER_TEST_PROJECT) -f $(DOCKER_TEST_COMPOSE_FILE) run $(SERVICE_TARGET) sh -c 'yarn test'
+	@ docker-compose -p $(DOCKER_TEST_PROJECT) -f $(DOCKER_TEST_COMPOSE_FILE) run $(SERVICE_TARGET) sh -c 'yarn test'
 	${INFO} "Cleaning workspace after test"
 	@ docker-compose -p $(DOCKER_TEST_PROJECT) -f $(DOCKER_TEST_COMPOSE_FILE) down -v
 
