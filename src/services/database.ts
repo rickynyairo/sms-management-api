@@ -1,4 +1,4 @@
-import { connect } from "mongoose";
+import { connect, connection } from "mongoose";
 import config from "../config";
 
 export const connectToDatabase = () => {
@@ -9,3 +9,5 @@ export const connectToDatabase = () => {
     process.exit(1);
   }
 };
+
+export const database = connection;

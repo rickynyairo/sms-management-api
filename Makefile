@@ -93,8 +93,11 @@ release:
 
 dev:
 	# run as a (background) service
-	docker-compose -p $(PROJECT_NAME) -f $(DOCKER_DEV_COMPOSE_FILE) up -d $(SERVICE_TARGET)
-	docker-compose -p $(PROJECT_NAME) -f $(DOCKER_DEV_COMPOSE_FILE) run --rm $(SERVICE_TARGET) sh -c 'yarn dev'
+	docker-compose -p $(PROJECT_NAME) -f $(DOCKER_DEV_COMPOSE_FILE) up $(SERVICE_TARGET)
+
+database:
+	# run the database in the background
+	docker-compose -p $(PROJECT_NAME) -f $(DOCKER_DEV_COMPOSE_FILE) up -d mongo
 
 login: service
 	# run as a service and attach to it
@@ -122,16 +125,13 @@ prune:
 test:
 	${INFO} "Building required docker images for testing"
 	@ echo " "
-	@ docker-compose -p $(DOCKER_TEST_PROJECT) -f $(DOCKER_TEST_COMPOSE_FILE) build --pull $(SERVICE_TARGET)
+	@ docker-compose -p $(DOCKER_TEST_PROJECT) -f $(DOCKER_TEST_COMPOSE_FILE) build --pull
 	${INFO} "Build Completed successfully"
 	@ echo " "
 	${INFO} "Running tests in docker container"
-	@ docker-compose -p $(DOCKER_TEST_PROJECT) -f $(DOCKER_TEST_COMPOSE_FILE) up -d $(SERVICE_TARGET)
+	@ docker-compose -p $(DOCKER_TEST_PROJECT) -f $(DOCKER_TEST_COMPOSE_FILE) up -d
 	${INFO} "Containers are up, run tests ==>>"
-	@ docker-compose -p $(DOCKER_TEST_PROJECT) -f $(DOCKER_TEST_COMPOSE_FILE) run --rm $(SERVICE_TARGET) sh -c 'yarn test'
-	${INFO} "Copying test coverage reports"
-	@ bash -c 'if [ -d "coverage" ]; then rm -Rf coverage; fi'
-	@ docker cp $$(docker-compose -p $(DOCKER_TEST_PROJECT) -f $(DOCKER_TEST_COMPOSE_FILE) ps -q $(SERVICE_TARGET)):/usr/src/app/coverage coverage
+	@ docker-compose -p $(DOCKER_TEST_PROJECT) -f $(DOCKER_TEST_COMPOSE_FILE) run $(SERVICE_TARGET) sh -c 'yarn test'
 	${INFO} "Cleaning workspace after test"
 	@ docker-compose -p $(DOCKER_TEST_PROJECT) -f $(DOCKER_TEST_COMPOSE_FILE) down -v
 
@@ -139,3 +139,7 @@ test:
 NC := "\e[0m"
 YELLOW := $(shell tput -Txterm setaf 3)
 INFO := @bash -c 'printf $(YELLOW); echo "===> $$1"; printf $(NC)' SOME_VALUE
+
+# ${INFO} "Copying test coverage reports"
+# @ bash -c 'if [ -d "coverage" ]; then rm -Rf coverage; fi'
+# @ docker cp $$(docker-compose -p $(DOCKER_TEST_PROJECT) -f $(DOCKER_TEST_COMPOSE_FILE) ps -q $(SERVICE_TARGET)):/coverage coverage

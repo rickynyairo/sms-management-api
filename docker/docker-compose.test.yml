@@ -18,6 +18,7 @@ services:
       - /usr/src/app/node_modules
     environment:
       - NODE_ENV=testing
+      - MONGO_DB_URL_TEST=mongodb://sms-management-api-test_mongo_1:27017/sms-app-test
       - SESSION_SECRET=${SESSION_SECRET}
       - PORT=${PORT}
     tty: true
@@ -26,4 +27,4 @@ services:
     restart: unless-stopped
     image: mongo:4.0.1
     ports:
-      - 27017:27017
+      - 27020:27017

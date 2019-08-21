@@ -12,7 +12,7 @@
     "dev": "tsc-watch --onSuccess \"node ./dist/app.js\"",
     "start:node": "yarn build && node ./dist/app.js",
     "lint": "tslint 'src/**/*.ts' --fix -p tsconfig.json -c tslint.json",
-    "test": "jest --coverage",
+    "test": "export NODE_ENV=testing && jest --coverage --forceExit --detectOpenHandles",
     "start": "pm2-runtime start ecosystem.config.js --env production",
     "test:coverage": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
   },
