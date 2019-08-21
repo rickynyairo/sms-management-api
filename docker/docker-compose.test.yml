@@ -1,0 +1,29 @@
+version: "3.1"
+volumes:
+  mongo_data:
+services:
+  sms-api:
+    build:
+      context: ../
+      dockerfile: docker/Dockerfile
+    restart: unless-stopped
+    container_name: sms-management-api-test
+    image: api:latest
+    links:
+      - mongo
+    ports:
+      - 3001:3001
+    volumes:
+      - ${PWD:-.}:/usr/src/app
+      - /usr/src/app/node_modules
+    environment:
+      - NODE_ENV=testing
+      - SESSION_SECRET=${SESSION_SECRET}
+      - PORT=${PORT}
+    tty: true
+    stdin_open: true
+  mongo:
+    restart: unless-stopped
+    image: mongo:4.0.1
+    ports:
+      - 27017:27017

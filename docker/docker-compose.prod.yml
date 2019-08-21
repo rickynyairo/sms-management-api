@@ -3,13 +3,9 @@ volumes:
   mongo_data:
 services:
   sms-api:
-    build: .
-    # context: .
-    # dockerfile: Dockerfile
-    # These variables are passed to Dockerfile.
-    # args:
-    #   - HOST_UID=${HOST_UID:-4000}
-    #   - HOST_USER=${HOST_USER:-nodummy}
+    build:
+      context: ../
+      dockerfile: docker/Dockerfile
     restart: unless-stopped
     container_name: sms-management-api
     image: api:latest
@@ -26,13 +22,6 @@ services:
       - MONGO_DB_URL=${MONGO_DB_URL}
       - SESSION_SECRET=${SESSION_SECRET}
       - PORT=${PORT}
-    command: yarn start:node
+    command: yarn start
     tty: true
     stdin_open: true
-  mongo:
-    restart: unless-stopped
-    image: mongo:3.6.4
-    volumes:
-      - ${PWD}/data/db:/data/db
-    ports:
-      - 27017:27017

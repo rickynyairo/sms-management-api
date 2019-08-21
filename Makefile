@@ -8,6 +8,15 @@ PROJECT_NAME = "sms-management-api"
 # only useful in a setting with multiple services/ makefiles.
 SERVICE_TARGET := sms-api
 
+# File names
+DOCKER_DEV_COMPOSE_FILE := docker/docker-compose.dev.yml
+DOCKER_TEST_COMPOSE_FILE := docker/docker-compose.test.yml
+DOCKER_PROD_COMPOSE_FILE := docker/release/docker-compose.prod.yml
+
+# Docker compose project names
+
+DOCKER_TEST_PROJECT := "$(PROJECT_NAME)-test"
+DOCKER_PROD_PROJECT := "$(PROJECT_NAME)-prod"
 # if vars not set specifically: try default to environment, else fixed value.
 # strip to ensure spaces are removed in future editorial mistakes.
 # tested to work consistently on popular Linux flavors and Mac.
@@ -78,9 +87,14 @@ rebuild:
 	# force a rebuild by passing --no-cache
 	docker-compose build --no-cache $(SERVICE_TARGET)
 
-service:
+release:
 	# run as a (background) service
-	docker-compose -p $(PROJECT_NAME) up -d $(SERVICE_TARGET)
+	docker-compose -p $(DOCKER_PROD_PROJECT) -f $(DOCKER_PROD_COMPOSE_FILE) up -d $(SERVICE_TARGET)
+
+dev:
+	# run as a (background) service
+	docker-compose -p $(PROJECT_NAME) -f $(DOCKER_DEV_COMPOSE_FILE) up -d $(SERVICE_TARGET)
+	docker-compose -p $(PROJECT_NAME) -f $(DOCKER_DEV_COMPOSE_FILE) run --rm $(SERVICE_TARGET) sh -c 'yarn dev'
 
 login: service
 	# run as a service and attach to it
@@ -88,15 +102,15 @@ login: service
 
 build:
 	# only build the container. Note, docker does this also if you apply other targets.
-	docker-compose build $(SERVICE_TARGET)
+	docker-compose build $(SERVICE_TARGET) -f $(DOCKER_DEV_COMPOSE_FILE)
 
 stop:
 	# stop running containers
-	docker-compose -p $(PROJECT_NAME) down
+	docker-compose -p $(PROJECT_NAME) -f $(DOCKER_DEV_COMPOSE_FILE) down
 
 clean:
 	# remove created images
-	@docker-compose -p $(PROJECT_NAME) down --remove-orphans --rmi all 2>/dev/null \
+	@docker-compose -p $(PROJECT_NAME) -f $(DOCKER_DEV_COMPOSE_FILE) down --remove-orphans --rmi all 2>/dev/null \
 	&& echo 'Image(s) for "$(PROJECT_NAME)" removed.' \
 	|| echo 'Image(s) for "$(PROJECT_NAME)" already removed.'
 
@@ -104,6 +118,24 @@ prune:
 	# clean all that is not actively used
 	docker system prune -af
 
+## Run project test cases
 test:
-	# here it is useful to add your own customised tests
-	docker-compose -p $(PROJECT_NAME) run --rm $(SERVICE_TARGET) sh -c 'yarn test'
+	${INFO} "Building required docker images for testing"
+	@ echo " "
+	@ docker-compose -p $(DOCKER_TEST_PROJECT) -f $(DOCKER_TEST_COMPOSE_FILE) build --pull $(SERVICE_TARGET)
+	${INFO} "Build Completed successfully"
+	@ echo " "
+	${INFO} "Running tests in docker container"
+	@ docker-compose -p $(DOCKER_TEST_PROJECT) -f $(DOCKER_TEST_COMPOSE_FILE) up -d $(SERVICE_TARGET)
+	${INFO} "Containers are up, run tests ==>>"
+	@ docker-compose -p $(DOCKER_TEST_PROJECT) -f $(DOCKER_TEST_COMPOSE_FILE) run --rm $(SERVICE_TARGET) sh -c 'yarn test'
+	${INFO} "Copying test coverage reports"
+	@ bash -c 'if [ -d "coverage" ]; then rm -Rf coverage; fi'
+	@ docker cp $$(docker-compose -p $(DOCKER_TEST_PROJECT) -f $(DOCKER_TEST_COMPOSE_FILE) ps -q $(SERVICE_TARGET)):/usr/src/app/coverage coverage
+	${INFO} "Cleaning workspace after test"
+	@ docker-compose -p $(DOCKER_TEST_PROJECT) -f $(DOCKER_TEST_COMPOSE_FILE) down -v
+
+## Colour schemes
+NC := "\e[0m"
+YELLOW := $(shell tput -Txterm setaf 3)
+INFO := @bash -c 'printf $(YELLOW); echo "===> $$1"; printf $(NC)' SOME_VALUE
