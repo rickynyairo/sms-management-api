@@ -18,3 +18,11 @@ export default [
   sessionMiddleware,
   passportMiddleware
 ];
+
+export const testingMiddleware = [
+  handleCors,
+  handleBodyRequestParsing,
+  handleCompression,
+  handleAPIDocs,
+  passportMiddleware
+];
