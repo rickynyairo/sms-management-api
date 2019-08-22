@@ -7,10 +7,8 @@ services:
       context: ../
       dockerfile: docker/Dockerfile
     restart: unless-stopped
-    container_name: sms-management-api
+    container_name: sms-management-api-prod
     image: api:latest
-    links:
-      - mongo
     ports:
       - 3001:3001
       - 9229:9229

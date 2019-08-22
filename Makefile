@@ -11,7 +11,7 @@ SERVICE_TARGET := sms-api
 # File names
 DOCKER_DEV_COMPOSE_FILE := docker/docker-compose.dev.yml
 DOCKER_TEST_COMPOSE_FILE := docker/docker-compose.test.yml
-DOCKER_PROD_COMPOSE_FILE := docker/release/docker-compose.prod.yml
+DOCKER_PROD_COMPOSE_FILE := docker/docker-compose.prod.yml
 
 # Docker compose project names
 
