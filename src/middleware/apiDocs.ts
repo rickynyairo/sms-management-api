@@ -1,5 +1,5 @@
 import { Router } from "express";
-import swaggerJSDoc from "swagger-jsdoc"
+import swaggerJSDoc from "swagger-jsdoc";
 import swaggerUiExpress from "swagger-ui-express";
 import swaggerJson from "../config/swagger.json";
 import path from "path";

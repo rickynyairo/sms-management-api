@@ -75,7 +75,7 @@ export class PostController {
  *               type: string
  *             content:
  *               type: string
- *          
+ *
  */
   createAPost = async (request: Request, response: Response) => {
     const post: Post = request.body;
