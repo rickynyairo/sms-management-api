@@ -8,7 +8,20 @@ export class PostController {
   constructor() {
     this.posts = postModel;
   }
-
+  /**
+  * @swagger
+  * /posts:
+  *   get:
+  *     summary: List all the posts
+  *     description: Returns a list of all the posts
+  *     tags:
+  *       - posts
+  *     responses:
+  *       200:
+  *         description: List of posts
+  *         schema:
+  *           type: list
+  */
   getAllPosts = async (_request: Request, response: Response) => {
     const posts = await this.posts
       .find()
@@ -30,7 +43,40 @@ export class PostController {
       .findByIdAndUpdate(id, postData, { new: true })
       .then((post: any) => response.send(post));
   };
-
+  /**
+ * @swagger
+ * /add:
+ *   post:
+ *     summary: Create a post
+ *     description: Add a post to the db
+ *     tags:
+ *       - posts
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               title:
+ *                 type: string
+ *               content:
+ *                 type: string
+ *               author:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: Adds the post in db
+ *         schema:
+ *           type: object
+ *           properties:
+ *             message:
+ *               type: string
+ *             title:
+ *               type: string
+ *             content:
+ *               type: string
+ *          
+ */
   createAPost = async (request: Request, response: Response) => {
     const post: Post = request.body;
     const createdPost = new postModel({

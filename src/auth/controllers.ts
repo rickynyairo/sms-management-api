@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { Document } from "mongoose";
 import { userModel, createUser, toAuthJSON } from "./models";
-import { postModel } from "../post/models";
+import { postModel } from "../posts/models";
 import { User } from "./interfaces";
 
 export default class UserController {

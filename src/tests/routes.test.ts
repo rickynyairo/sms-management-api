@@ -6,7 +6,7 @@ import { applyMiddleware, applyRoutes } from "../utils";
 import middleware, { testingMiddleware } from "../middleware";
 import errorHandlers from "../middleware/errorHandlers";
 import authRoutes from "../auth/routes";
-import postRoutes from "../post/routes";
+import postRoutes from "../posts/routes";
 import { connectToDatabase, database } from "../services/database";
 import config from "../config"
 import {

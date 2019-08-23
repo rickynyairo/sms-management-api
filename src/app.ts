@@ -2,7 +2,7 @@ import http from "http";
 import express from "express";
 import { applyMiddleware, applyRoutes } from "./utils";
 import authRoutes from "./auth/routes";
-import postRoutes from "./post/routes";
+import postRoutes from "./posts/routes";
 import commonMiddleware from "./middleware";
 import errorHandlers from "./middleware/errorHandlers";
 import { validateEnv } from "./utils/validateEnv";
