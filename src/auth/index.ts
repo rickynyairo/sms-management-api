@@ -1,18 +1,18 @@
 import passport from "passport";
 import { Strategy as LoginStrategy } from "passport-local";
 import { Strategy as JwtStrategy, ExtractJwt } from "passport-jwt";
-import { getUserByUserName, comparePassword, getUserById } from "./models";
+import { getUserByusername, comparePassword, getUserById } from "./models";
 import config from "../config";
 
 export const passportLoginStrategy = () => {
   passport.use(
     "login",
     new LoginStrategy(
-      { usernameField: "userName" },
-      async (userName: string, password: string, done) => {
-        const message = "Invalid Username or Password";
+      { usernameField: "username" },
+      async (username: string, password: string, done) => {
+        const message = "Invalid username or Password";
         try {
-          const user = await getUserByUserName(userName);
+          const user = await getUserByusername(username);
           if (!user) {
             return done(false, false, { message });
           }

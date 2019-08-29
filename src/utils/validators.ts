@@ -40,7 +40,7 @@ export class LoginValidator {
   @IsDefined({ message: "$property is required in the request" })
   @IsString({ message: "$property should be a string" })
   @MinLength(4, { message: "$property should have atleast 4 characters" })
-  userName!: string;
+  username!: string;
 
   @IsDefined({ message: "$property is required in the request" })
   @IsAlphanumeric({ message: "$property should only have numbers and letters" })

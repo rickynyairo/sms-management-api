@@ -25,7 +25,7 @@ describe("routes", () => {
   let user2Token: any;
   beforeAll(async () => {
     const user1 = {
-      userName: "testuser",
+      username: "testuser",
       password: "testpassword",
       address: {
         city: "Nairobi",
@@ -54,7 +54,7 @@ describe("routes", () => {
 
   test("can create a user", async (done) => {
     const user2 = {
-      userName: "testuser2",
+      username: "testuser2",
       password: "testpassword2",
       address: {
         city: "Mombasa",

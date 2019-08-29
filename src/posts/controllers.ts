@@ -25,7 +25,7 @@ export class PostController {
   getAllPosts = async (_request: Request, response: Response) => {
     const posts = await this.posts
       .find()
-      .populate("author", "userName")
+      .populate("author", "username")
       .exec();
     return response.status(200).send(posts);
   };
@@ -84,7 +84,7 @@ export class PostController {
       author: request.user._id
     });
     const savedPost = await createdPost.save();
-    await savedPost.populate("author", "userName").execPopulate();
+    await savedPost.populate("author", "username").execPopulate();
     return response.status(201).send(savedPost);
   };
 
@@ -122,7 +122,7 @@ export class ReportController {
           },
           users: {
             $push: {
-              userName: "$userName",
+              username: "$username",
               _id: "$_id"
             }
           },

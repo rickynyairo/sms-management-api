@@ -6,7 +6,7 @@ import config from "../config";
 
 interface TokenData {
   id: string;
-  userName: string;
+  username: string;
   token: string;
 }
 const addressSchema = new Schema({
@@ -16,7 +16,7 @@ const addressSchema = new Schema({
 
 const userSchema = new Schema({
   address: addressSchema,
-  userName: String,
+  username: String,
   password: String
 });
 
@@ -24,10 +24,10 @@ export const userModel = model<User & Document>("User", userSchema);
 
 export const generateJWT = (user: any): string => {
   const expiresIn = "7d";
-  const { userName, id } = user;
+  const { username, id } = user;
   return jwt.sign(
     {
-      userName,
+      username,
       id,
       expiresIn
     },
@@ -37,10 +37,10 @@ export const generateJWT = (user: any): string => {
 };
 
 export const toAuthJSON = (user: any): TokenData => {
-  const { userName, id } = user;
+  const { username, id } = user;
   return {
     id,
-    userName,
+    username,
     token: generateJWT(user)
   };
 };
@@ -53,8 +53,8 @@ export const createUser = (user: User & Document, callback: any) => {
   });
 };
 
-export const getUserByUserName = (userName: string) => {
-  return userModel.findOne({ userName });
+export const getUserByusername = (username: string) => {
+  return userModel.findOne({ username });
 };
 
 export const getUserById = (id: string) => {

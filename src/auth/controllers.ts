@@ -14,15 +14,15 @@ export default class UserController {
     request: Request,
     response: Response,
   ) => {
-    const { userName, id } = request.user;
+    const { username, id } = request.user;
     return response
       .status(200)
-      .send({ message: "success", ...toAuthJSON({ userName, id }) });
+      .send({ message: "success", ...toAuthJSON({ username, id }) });
   };
 
   registerUser = async (request: Request, response: Response) => {
     const newUser: User & Document = new userModel(request.body);
-    if (await userModel.findOne({ userName: newUser.userName })) {
+    if (await userModel.findOne({ username: newUser.username })) {
       return response
         .status(400)
         .send({ message: "A user with that username exists" });
@@ -34,7 +34,7 @@ export default class UserController {
         .send({
           message: "success",
           ...toAuthJSON({
-            userName: savedUser.userName,
+            username: savedUser.username,
             id: savedUser.id
           })
         })
