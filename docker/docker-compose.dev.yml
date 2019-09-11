@@ -1,6 +1,7 @@
 version: "3.1"
 volumes:
   mongo_data:
+  certificates:
 services:
   sms-api:
     build:
@@ -11,9 +12,8 @@ services:
     image: api:latest
     links:
       - mongo
-    ports:
-      - 3001:3001
-      - 9229:9229
+    expose:
+      - 3001
     volumes:
       - ${PWD:-.}:/usr/src/app
       - /usr/src/app/node_modules
@@ -25,6 +25,9 @@ services:
     command: yarn dev
     tty: true
     stdin_open: true
+    networks:
+      - sms-api-network
+
   mongo:
     restart: unless-stopped
     image: mongo:4.0.1
@@ -33,3 +36,23 @@ services:
       - mongo_data:/data/db
     ports:
       - 27017:27017
+    networks:
+      - sms-api-network
+
+  nginx:
+    image: nginx:latest
+    container_name: dev_nginx
+    depends_on:
+      - sms-api
+    volumes:
+      - ./nginx:/etc/nginx/conf.d
+      - ./nginx_error.log:/etc/nginx/error_log.log
+      - "certificates:/etc/letsencrypt/"
+    ports:
+      - "8080:80"
+      - "443:443"
+    networks:
+      - sms-api-network
+networks:
+  sms-api-network:
+    driver: bridge
