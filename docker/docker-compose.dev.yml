@@ -45,9 +45,9 @@ services:
     depends_on:
       - sms-api
     volumes:
-      - ./nginx:/etc/nginx/conf.d
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
       - ./nginx_error.log:/etc/nginx/error_log.log
-      - "certificates:/etc/letsencrypt/"
+      - certificates:/etc/letsencrypt/
     ports:
       - "8080:80"
       - "443:443"
